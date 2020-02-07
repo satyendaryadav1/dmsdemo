@@ -1,0 +1,586 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="DMS.master.cs" Inherits="DealerManagementSystem.DMS" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>DMS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CQuicksand:300,400,500,700"
+        rel="stylesheet">
+    <link href="assets/css/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/material.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/components.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/bootstrap-extended.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/material-colors.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/material-extended.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/material-vertical-menu.min.css" rel="stylesheet" type="text/css" />    
+  
+    <link href="assets/css/morris.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="assets/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/material-palette-gradient.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/daterange.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/custom.css" rel="stylesheet" type="text/css" />   
+    <link href="assets/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/jqueryui.css" rel="stylesheet" type="text/css" />  
+    <script src="../js/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <script>        var jquery_1_11_3_min_p = jQuery.noConflict();</script>
+   
+    <script type="text/javascript">
+
+        jquery_1_11_3_min_p(document).ready(function () {
+            jQuery(function ($) {
+                var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
+                $('#main-menu-navigation ul a').each(function () {
+                    if (this.href === path) {
+    
+                        $(this).parent().addClass('active');
+    
+                    }
+                });
+            });
+            $('.k-state-border-down').css('background', 'red');
+
+
+        });
+
+        function Logout() {
+
+            jquery_1_11_3_min_p.ajax({
+                type: "POST",
+                url: "../WebServices/Dashboard.asmx/Logout",
+                contentType: "application/json; charset=utf-8",
+                data: "{}",
+                dataType: "json",
+                async: false,
+                success: LogoutDone,
+                error: LogoutFailed
+            });
+            function LogoutDone() {
+                sessionStorage.setItem("BranchID", null);
+                sessionStorage.setItem('CheckStatus', -1)
+                location.href = "../Login.aspx";
+            }
+            function LogoutFailed() {
+                alert("fail");
+            }
+        }
+    </script>
+    <style>
+    
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body class="vertical-layout vertical-menu material-vertical-layout material-layout 2-columns   fixed-navbar"
+    data-open="click" data-menu="vertical-menu" data-col="2-columns">
+    <form id="form1" runat="server">
+    <div>
+        <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light bg-primary navbar-shadow">
+      <div class="navbar-wrapper">
+        <div class="navbar-header">
+          <ul class="nav navbar-nav flex-row">
+            <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#">
+            <i class="fa fa-bars"></i>
+            </a></li>
+            <li class="nav-item"><a class="navbar-brand" href="#">
+			<img src="../assets/img/logo.png" height="35px" width="35px">
+                <h4 class="brand-text">Company Name</h4></a></li>
+            <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="fa fa-user"></i></a></li>
+          </ul>
+        </div>
+        <div class="navbar-container content">
+          <div class="collapse navbar-collapse" id="navbar-mobile">
+            <ul class="nav navbar-nav mr-auto float-left">
+              <li class="nav-item d-none d-md-block"><a class="nav-link nav-menu-main menu-toggle" href="#">  <i class="fa fa-bars" aria-hidden="true"></i></a></li>
+              <li class="nav-item nav-link-search"><a class="nav-link d-none d-lg-block" href="#"><i class="fa fa-search-plus searchicon"></i>
+                  <input class="round form-control search-box" type="text" placeholder="Search"><a class="nav-link dropdown-toggle search-bar-toggle d-lg-none d-m-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">search</i></a>
+                  <div class="dropdown-menu arrow"><a class="dropdown-item">
+                      <input class="round form-control" type="text" placeholder="Search Here"></a></div></a></li>
+              <li class="nav-item d-none d-lg-block d-none">
+              <a class="nav-link nav-link-expand" > <i class="fa fa-expand"></i></a>
+              </li>
+           
+            </ul>
+            <ul class="nav navbar-nav float-right">
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><span class="mr-1 user-name text-bold-600" id="lb1" runat="server" ></span><span class="avatar avatar-online">
+              <img src="../assets/img/user.png" />
+             </span></a>
+                <div class="dropdown-menu dropdown-menu-right">
+               <%-- <a class="dropdown-item" href="user-profile.html"><i class="material-icons">person_outline</i> Edit Profile</a>
+                <a class="dropdown-item" href="app-email.html"><i class="material-icons">mail_outline</i> My Inbox</a>--%>
+                <a class="dropdown-item" href="../ChangePassword.aspx"><i class="fa fa-lock"></i> Change Password</a>
+                  <%--<div class="dropdown-divider"></div>--%>
+                <a class="dropdown-item" href="#" id="anchorclick" onclick="Logout();"><i class="fa fa-sign-out"></i> Logout</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+        <div class="main-menu material-menu menu-fixed menu-light menu-accordion    menu-shadow "
+            data-scroll-to-active="true">
+            <div class="main-menu-content">
+                <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                  <%--  <li class=" nav-item"><a href="#"><i class="fa fa-home" aria-hidden="true"></i><span
+                        class="menu-title">Dashboard</span></a>
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="#"><span>Dashboard</span></a>
+                                <ul class="menu-content">
+                                    <li class=""><a class="menu-item" href="../Home/Dashboard.aspx"><span >
+                                        My Dashboard</span></a> </li>   
+                                </ul>
+                            </li>
+                            
+                        
+                        </ul>
+                    </li>--%>
+                      
+<%--
+                    <li class=" nav-item"><a href="#"><i class="fa fa-users" aria-hidden="true"></i><span
+                        class="menu-title">Requisition</span></a>
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="#"><span>Requisition</span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="../Master/AllRequisition.aspx"><span>All Requisition</span></a> </li>
+    <li><a class="menu-item" href="../Master/RequestControl.aspx"><span>Request Control</span></a> </li>
+
+                                </ul>
+                            </li>
+                   
+                                     
+                                </ul>
+                            
+                    </li>--%>
+             <%--  <li class=" nav-item"><a href="#"><span
+                        class="menu-title">Dashboard</span></a>
+                        <ul class="menu-content">
+                           
+                              <li><a class="menu-item" href="../Home/Dashboard.aspx"><span>Home</span></a>   </li> 
+                        </ul>
+                    </li>--%>
+            <%-- <li class=" nav-item"><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span
+                        class="menu-title">Inventory</span></a>
+                        <ul class="menu-content">
+                           <li><a class="menu-item" href="../Master/AllItem.aspx"><span>All Item</span></a>   </li>
+                           <li><a class="menu-item" href="../Master/AllRequisition.aspx"><span> All Requisition</span></a>   </li>
+                           <li><a class="menu-item" href="../Master/RequestControl.aspx"><span> Request Control</span></a>   </li>
+                         <li><a class="menu-item" href="../Master/Onhand.aspx"><span>Onhand</span></a>   </li>
+                           
+                        </ul>
+                    </li>--%>
+                    <li class=" nav-item"><a href="../Home/Dashboard.aspx"><span
+                        class="menu-title">Dashboard</span></a>                    </li>
+                        <%--<li class=" nav-item"><a href="../Master/Partners.aspx"><span
+                        class="menu-title">Partners</span></a>                    </li>--%>
+                             <li class=" nav-item"><a href="#"><span class="menu-title"><span class="customers">Partners </span></span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Sub-menu</span></a>
+                         <ul class="menu-content">
+                           
+                        <li class=""><a class="menu-item" href="../Master/PartnerGroup.aspx"><span class="customer">  Partner</span> Group </a> </li> 
+                        <li class=""><a class="menu-item" href="../Master/Partner.aspx"><span class="customer">  Partner </span> </a> </li>
+                       
+                     <%--    <li class=""><a class="menu-item" href="../Master/PartnerTransaction.aspx"><span class="customer">   Partner  </span> Transaction</a> </li> --%>
+                          <li class=""><a class="menu-item" href="../Master/ItemAssigned.aspx"><span class="customer">   Item Assigned </span> </a> </li>
+                      <%--  <li class=""><a class="menu-item" href="../Master/PartnerOnhand.aspx"><span class="customer">  Partner </span> Onhand</a> </li>--%>
+                         </ul>
+                     </li>
+                   </ul>
+                    </li>
+
+                                <li class=" nav-item"><a href="#"><span class="menu-title">Vendor</span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Sub-menu</span></a>
+                         <ul class="menu-content">
+                           
+                            <li class=""><a class="menu-item" href="../Master/vendorGroup.aspx"><span >Vendor Group </span></a> </li> 
+                            <li class=""><a class="menu-item" href="../Master/vendor.aspx"><span >Vendor </span></a> </li> 
+                             <li class=""><a class="menu-item" href="../Master/itemAssignedVendor.aspx"><span >Item Assigned </span></a> </li> 
+                         </ul>
+                     </li>
+                   </ul>
+                    </li>
+                                <li class=" nav-item"><a href="#"><span class="menu-title">Item</span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Sub-menu</span></a>
+                         <ul class="menu-content">
+                           
+                         <li class=""><a class="menu-item" href="../Master/ItemCreate.aspx "><span >  Item</span></a> </li>
+                         </ul>
+                     </li>
+                   </ul>
+                    </li>
+
+                              <li class=" nav-item"><a href="#"><span class="menu-title">Requisition Center</span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Sub-menu</span></a>
+                         <ul class="menu-content">
+                            <li class=""><a class="menu-item" href="../Master/AllRequisition.aspx"><span >  All Requisition </span></a> </li>
+                             <li class=""><a class="menu-item" href="../Master/RequestControl.aspx"><span >  Request Control </span></a> </li>
+                         </ul>
+                     </li>
+                   </ul>
+                    </li>
+                       <%-- <li class=" nav-item"><a href="#"><span
+                        class="menu-title">Requisition Center</span></a>                    </li>--%>
+                                           <li class=" nav-item"><a href="#"><span class="menu-title">Inventory</span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Sub-menu</span></a>
+                         <ul class="menu-content">
+                            <li class=""><a class="menu-item" href="../Master/InventoryTransaction.aspx"><span >  Inventory Transaction </span></a> </li>
+                             <li class=""><a class="menu-item" href="../Master/InventoryOnhand.aspx"><span >  Inventory Onhand </span></a> </li>
+                         </ul>
+                     </li>
+                   </ul>
+                    </li>
+                          <%-- <li class=" nav-item"><a href="#"><span
+                        class="menu-title">Inventory</span></a>                    </li>--%>
+                        <li class=" nav-item"><a href="#"><span
+                        class="menu-title"><span class="customer">Partner </span> Rewards</span></a>                    </li>
+                           <li class=" nav-item"><a href="#"><span
+                        class="menu-title"><span class="customer">Partner </span> Grievance</span></a>                    </li>
+                        <li class=" nav-item"><a href="../Master/AllRequisition.aspx"><span
+                        class="menu-title">Secondary Sales</span></a>                    </li>
+                           <li class=" nav-item"><a href="#"><span class="menu-title">Primary Sales</span></a> 
+                              <ul class="menu-content">
+                         <li><a class="menu-item" href="#"><span>Sub-menu</span></a>
+                       <ul class="menu-content">
+                        <%-- <li class=""><a class="menu-item" href="../Master/ItemSale.aspx"><span >Sales </span></a> </li> --%>
+                       <li class=""><a class="menu-item" href="../Master/SaleInvoice.aspx"><span >Sale Invoice </span></a> </li>
+                       <li class=""><a class="menu-item" href="../Master/PrintInvoice.aspx"><span >Print Invoice </span></a> </li>
+                       <li class=""><a class="menu-item" href="../Master/PurchaseInvoice.aspx"><span >Purchase Invoice </span></a> </li>
+                       <li class=""><a class="menu-item" href="../Master/PurchasePaymentJournal.aspx"><span >Purchase Payment Journal </span></a> </li>
+                       <li class=""><a class="menu-item" href="../Master/SalesPaymentJourna.aspx"><span >Sales  Payment Journal</span></a> </li>
+                       </ul>
+                     </li>
+                   </ul>
+                        
+                                           </li>
+                        <li class=" nav-item"><a href="#"><span
+                        class="menu-title">Internal Transfer</span></a>                    </li>
+                           <li class=" nav-item"><a href="#"><span
+                        class="menu-title">Contract & Agreement</span></a>                    </li>
+                        <li class=" nav-item"><a href="#"><span
+                        class="menu-title">MIS Center</span></a>                    </li>
+                         <%--  <li class=" nav-item"><a href="#"><span
+                        class="menu-title">System & Administration</span></a>                    </li>--%>
+                   
+
+                <%--          <li class=" nav-item"><a href="#"><span
+                        class="menu-title">System & Administration</span></a>
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="../Master/Address2.aspx"><span>Address</span></a>   </li>
+                             <li><a class="menu-item" href="../Master/AddressFieldSetup.aspx"><span>Address Field Setup</span></a>   </li>  
+                        </ul>
+                    </li>--%>
+                <%--           <li class=" nav-item"><a href="#"><i class="fa fa-file" aria-hidden="true"></i><span
+                        class="menu-title">Reports</span></a>
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="../Master/Reports.aspx"><span>All Reports</span></a>   </li>
+                              
+                        </ul>
+                    </li>--%>
+                   <%--      <li class=" nav-item"><a href="#"><i class="fa fa-money" aria-hidden="true"></i><span
+                        class="menu-title">My Account</span></a>
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="../Master/Transaction.aspx"><span>Transactions</span></a>   </li>
+                              
+                        </ul>
+                    </li>--%>
+         
+                  <%--        <li class=" nav-item"><a href="#"><i class="fa fa-user" aria-hidden="true"></i><span
+                        class="menu-title">Admin</span></a>
+                        <ul class="menu-content">
+                            <li><a class="menu-item" href="../Master/UserCreation.aspx"><span>User Creation</span></a>   </li>
+                              <li><a class="menu-item" href="../Master/RoleCreation.aspx"><span>Role Creation</span></a>   </li> 
+                               <li><a class="menu-item" href="../Master/RollAssign.aspx"><span>Role Assign</span></a>   </li> 
+                        </ul>
+                    </li>--%>
+                    <li class=" nav-item"><a href="#"><span
+                        class="menu-title">System & Administration</span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Address</span></a>
+                  <ul class="menu-content">
+                  <li class=""><a class="menu-item" href="../Master/AddressFields.aspx"><span >   Address Fields </span></a> </li>   
+                  <li class=""><a class="menu-item" href="../Master/AddressFieldSetup.aspx"><span >   Address Field Setup</span></a> </li> 
+                  <li class=""><a class="menu-item" href="../Master/AddressDataSetup.aspx"><span > Address Data Setup</span></a> </li> 
+                  
+                                   
+                    </ul>
+                            </li>
+                                <li><a class="menu-item" href="#"><span>Tax Setup</span></a>
+                  <ul class="menu-content">                  
+                  <li class=""><a class="menu-item" href="../Master/TaxFields.aspx"><span > Tax Fields</span></a> </li> 
+                    <li class=""><a class="menu-item" href="../Master/LegalFields.aspx"><span > Legal Fields</span></a> </li>   
+                    <li class=""><a class="menu-item" href="../Master/TaxSetup.aspx"><span >Setup</span></a> </li>  
+                    </ul>
+                            </li> 
+                            <li><a class="menu-item" href="#"><span>Discount</span></a>
+                  <ul class="menu-content">
+                     <li class="">  <a class="menu-item" href="../Master/DiscountSetup.aspx"><span >  Setup</span></a> </li> 
+                  </ul>
+                  </li> 
+                           <li><a class="menu-item" href="#"><span>COA</span></a>
+                  <ul class="menu-content">
+                     <li class="">  <a class="menu-item" href="../Master/COA.aspx"><span >  Setup</span></a> </li> 
+                  </ul>
+                  </li> 
+<%--
+                                             <li><a class="menu-item" href="#"><span>Tax Group</span></a>
+                  <ul class="menu-content">                  
+                  <li class=""><a class="menu-item" href="../Master/ItemTaxGroup.aspx"><span > Item Tax</span></a> </li>  
+                  <li class=""><a class="menu-item" href="../Master/ItemDiscountGroup.aspx"><span > Item Discount</span></a> </li>
+                  <li class=""><a class="menu-item" href="../Master/VendorTaxGroup.aspx"><span > Vendor Tax Group</span></a> </li>  
+                  <li class=""><a class="menu-item" href="../Master/CustomerTaxGroup.aspx"><span > Customer Tax</span></a> </li>  
+                  <li class=""><a class="menu-item" href="../Master/CustomerTaxDiscount.aspx"><span > Customer Tax Discount</span></a> </li>  
+                  <li class=""><a class="menu-item" href="../Master/LocationTaxGroup.aspx"><span > Location Tax</span></a> </li>
+                  <li class=""><a class="menu-item" href="../Master/LocationTaxDiscount.aspx"><span > Location Tax Discount</span></a> </li>      
+                    </ul>
+                            </li> --%>
+                  <li><a class="menu-item" href="#"><span>Unit</span></a>
+                  <ul class="menu-content">
+                     <li class="">  <a class="menu-item" href="../Master/Unit.aspx"><span > Unit Setup</span></a> </li> 
+                  </ul>
+                  </li> 
+
+                                    <li><a class="menu-item" href="#"><span>Item Group</span></a>
+                  <ul class="menu-content">                  
+                  <li class=""><a class="menu-item" href="../Master/ItemGroupSetup.aspx"><span >Item Group Setup</span></a> </li>
+                 <%-- <li class=""><a class="menu-item" href="../Master/ItemGroupDataSetup.aspx"><span > Item Group Data Setup</span></a> </li>   
+            --%>
+                    </ul>
+                            </li> 
+
+                             <li><a class="menu-item" href="#"><span>Variant</span></a>
+                  <ul class="menu-content">                  
+                  
+                     <li class="">  <a class="menu-item" href="../Master/variantSetup.aspx"><span > Variant Setup</span></a> </li> 
+                    
+                    </ul>
+                            </li> 
+                                     <li><a class="menu-item" href="#"><span>Sequence Setup</span></a>
+                  <ul class="menu-content">                  
+                  <li class=""><a class="menu-item" href="../Master/CreateSequence.aspx"><span >Create Sequence</span></a> </li>  
+                    </ul>
+                            </li> 
+                        </ul>
+                    </li>
+                           <li class=" nav-item"><a href="#"><span
+                        class="menu-title">Organization & Administration</span></a>
+                   <ul class="menu-content">
+                     <li><a class="menu-item" href="#"><span>Organization</span></a>
+                  <ul class="menu-content">
+                  <li class=""><a class="menu-item" href="../Master/OrganizationPara.aspx"><span >Organization Parameter</span></a> </li>   
+                  <li class=""><a class="menu-item" href="../Master/OrganizationDataSetup.aspx"><span > Organization Data Setup  </span></a> </li>  
+                   <li class=""><a class="menu-item" href="../Master/SystemParameterSetup.aspx"><span >System Parameter Setup </span></a> </li>  
+                   <li class=""><a class="menu-item" href="../Master/UiSetup.aspx"><span >UI Setup </span></a> </li>  
+                  
+                                   
+                    </ul>
+                            </li>
+                 <li><a class="menu-item" href="#"><span>Partner</span></a>
+                  <ul class="menu-content">
+                  <li class=""><a class="menu-item" href="../Master/PartnerPara.aspx"><span >Partner Parameter</span></a> </li>   
+                 
+                   <li class=""><a class="menu-item" href="../Master/PartnerDataSetup.aspx"><span >Partner Data Setup</span></a> </li>  
+                     <li class=""><a class="menu-item" href="../Master/test.aspx"><span >Test</span></a> </li>       
+                    </ul>
+                            </li>
+                        
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="app-content content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <div class="sidenav-overlay">
+        </div>
+        <div class="drag-target">
+        </div>
+        <!-- BEGIN: Footer-->
+        <footer class="footer footer-static footer-light navbar-border navbar-shadow fixed-bottom">
+      
+  <div class="row  pl-1 headerDropdown ">
+    <div class="col-md-4 pull-left">    
+   <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; 2019 </span><span class="float-md-right d-none d-lg-block"> <i class="ft-home "></i><span id="scroll-top"></span></span></p>
+    
+    </div>
+    
+  
+    <div class="col-md-4 footerDropdown">
+                  <div class=" pull-right pr-1">
+                                                   <label class="pr-1">Select Country</label>
+                                                    <input type="text" id="ddlcountry"  autocomplete="off"  style="width: 100px;"/>
+                                                </div>                              
+                                            </div>
+<div class="col-md-4 footerDropdown">
+<div class=" pull-right ">
+                                                   <label class="pr-1">Select Entity</label>
+                                                    <input type="text" id="ddlentity"  autocomplete="off"  style="width: 100px;"/>
+   
+                                                </div>
+                                                
+                                            </div>
+                                            </div>
+
+
+    </footer>
+        <div class="modal fade text-left" id="success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary white">
+                        <h4 class="modal-title white" id="myModalLabel8">
+                            Success Message</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Record succesfully added
+                        </p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">
+                                Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade text-left" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary white">
+                        <h4 class="modal-title white" id="H2">
+                            Delete Message</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Record deleted succesfully
+                        </p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">
+                                Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade text-left" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary white">
+                        <h4 class="modal-title white" id="H1">
+                            Confirm</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>
+                            Are you sure ! Do you want to delete it?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="no" class="btn grey btn-outline-secondary" data-dismiss="modal">
+                            No</button>
+                        <button type="button" id="yes" class="btn btn-outline-primary">
+                            Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+       <script src="../assets/js/material-vendors.min.js" type="text/javascript"></script>
+        <script src="../assets/js/moment-with-locales.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.sticky.js" type="text/javascript"></script>
+        <script src="../assets/js/app-menu.min.js" type="text/javascript"></script>
+        <script src="../assets/js/app.min.js" type="text/javascript"></script>
+        <script src="../assets/js/customizer.min.js" type="text/javascript"></script>
+        <script src="../assets/js/footer.min.js" type="text/javascript"></script>
+        <script src="../assets/js/material-app.min.js" type="text/javascript"></script>
+        <script src="../assets/js/sweetalert.min.js" type="text/javascript"></script>
+        <script src="../assets/js/date-pickers.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery-ui.min.js" type="text/javascript"></script>
+       <%--  <script src="../assets/js/form-select2.min.js" type="text/javascript"></script>
+        <script src="../assets/js/select2.full.min.js" type="text/javascript"></script>--%>
+                <script type="text/javascript">
+
+                    jquery_1_11_3_min_p(document).ready(function () {
+
+                        jquery_1_11_3_min_p("#reset").click(function () {
+                            $(".dropdownBottom").parent().addClass("show");
+                            $(".dropdownBottom").parent().parent().addClass("show");
+                        })
+                        jquery_1_11_3_min_p("#selectall").click(function () {
+                            $(".dropdownBottom").parent().addClass("show");
+                            $(".dropdownBottom").parent().parent().addClass("show");
+                        })
+                        $('body').click(function () {
+                            $(".dropdownBottom").parent().removeClass("show");
+                            $(".dropdownBottom").parent().parent().removeClass("show");
+                        });
+                        //                $('#guide').click(function (event) {
+                        //                    event.stopPropagation();
+                        //                });
+                        $('.checkboxSearch').click(function (event) {
+
+                            event.stopPropagation();
+                        });
+
+
+                    });
+
+                    jquery_1_11_3_min_p(document).ready(function () {
+                        jquery_1_11_3_min_p("#btnclosedata").click(function () {
+
+                            jquery_1_11_3_min_p("#AllLeaveRequestPopup").hide();
+                            jquery_1_11_3_min_p(".modal-backdrop").hide();
+                        });
+                        jquery_1_11_3_min_p("#btnclosedata2").click(function () {
+
+                            jquery_1_11_3_min_p("#conversion").hide();
+                            jquery_1_11_3_min_p(".modal-backdrop").hide();
+                        });
+                    });
+
+        </script>
+       <%-- <script>
+            jquery_1_11_3_min_p(document).ready(function () {
+                jquery_1_11_3_min_p("#lb1").click(function () {
+                    jquery_1_11_3_min_p("#lb1").unclick();
+
+                });
+            });
+        </script>--%>
+
+    </div>
+   
+    </form>
+ <%--<script>
+     $(document).ready(function () {
+         $(".customer").text("Customer");
+        
+     });
+</script>--%>
+
+</body>
+</html>
