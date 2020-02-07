@@ -17,6 +17,7 @@
                 font-family:  sans-serif !important;
     background-image: url(../assets/img/loginnn2.png);
     /*background-position: center;*/
+
     background-size: cover;
     background-repeat: no-repeat;
 
